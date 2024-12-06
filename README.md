@@ -15,3 +15,12 @@ curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
 ```
 
 Run `vim` and then run `:PlugInstall`
+
+### References
+- [Min Vim Golang Setup](https://tpaschalis.me/vim-go-setup/)
+- [vim-plug](https://github.com/junegunn/vim-plug)
+- [vim-go](https://github.com/fatih/vim-go)
+- [NerdTree](https://github.com/preservim/nerdtree)
+- [vim-fugitive](https://github.com/tpope/vim-fugitive)
+- [vim-airline](https://github.com/vim-airline/vim-airline)
+- [vim-rust](https://github.com/rust-lang/rust.vim)
