@@ -94,6 +94,9 @@ Plug 'tpope/vim-fugitive'
 " Coc.nvim 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
+" Vim-AI
+Plug 'madox2/vim-ai'
+
 call plug#end()
 " }}}
 
@@ -208,6 +211,21 @@ nnoremap <leader>sh :split <C-R>=expand("%:p:h") . "/"<CR>
 " Open a vertical split and prompt for a file
 nnoremap <leader>sv :vsplit <C-R>=expand("%:p:h") . "/"<CR>
 
+" complete text on the current line or in visual selection
+nnoremap <leader>a :AI<CR>
+xnoremap <leader>a :AI<CR>
+
+" edit text with a custom prompt
+xnoremap <leader>s :AIEdit fix grammar and spelling<CR>
+nnoremap <leader>s :AIEdit fix grammar and spelling<CR>
+
+" trigger chat
+xnoremap <leader>c :AIChat<CR>
+nnoremap <leader>c :AIChat<CR>
+
+" redo last AI command
+nnoremap <leader>r :AIRedo<CR>
+
 " }}}
 
 
@@ -220,6 +238,24 @@ augroup filetype_vim
     autocmd FileType vim setlocal foldmethod=marker
 augroup END
 
+let g:vim_ai_complete = {
+            \   "options": {
+            \       "model": "o1-mini",
+            \   },
+            \}
+let g:vim_ai_chat = {
+            \   "options": {
+            \       "model": "o1-mini",
+            \   },
+            \}
+
+let g:vim_ai_edit = {
+            \   "options": {
+            \       "model": "o1-mini",
+            \   },
+            \}
+
+
 " More Vimscripts code goes here.
 
 " }}}
@@ -230,4 +266,3 @@ augroup END
 " Status bar code goes here.
 
 " }}}
-
