@@ -1,0 +1,19 @@
+{
+    "languageserver": {
+        "go": {
+            "command": "gopls",
+            "rootPatterns": [
+                "go.mod",
+                ".git/"
+            ],
+            "filetypes": [
+                "go"
+            ],
+            "initializationOptions": {
+                "usePlaceholders": true,
+                "completeUnimported": true
+            }
+        }
+    },
+    "coc.preferences.formatOnSave": true
+}
