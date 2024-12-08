@@ -60,6 +60,7 @@ let g:go_code_completion_enabled = 1
 
 " Golang Syntax Highlight 
 let g:go_fmt_command = "gopls"
+let g:go_imports_mode = "gopls"
 let g:go_highlight_functions = 1
 let g:go_highlight_methods = 1
 let g:go_highlight_operators = 1
@@ -69,11 +70,8 @@ let g:go_highlight_types = 1
 let g:go_metalinter_command = "golangci-lint run --out-format=line-number"
 
 let g:go_echo_command_info = 0
-let g:go_def_mapping_enabled = 1
+let g:go_def_mapping_enabled = 0
 let g:go_jump_to_error = 0
-
-" Coc.nvim Autocompletion Global Extension 
-let g:coc_global_extensions = ['coc-go']
 
 " PLUGINS ---------------------------------------------------------------- {{{
 
@@ -136,25 +134,7 @@ nnoremap <leader>tf :GoTestFunc<CR>
 nnoremap <leader>gf :GoFmt<CR>
 
 " Run Go linting
-nnoremap <leader>gl :GoLint<CR>
-
-" Display documentation for the symbol under the cursor
-nnoremap <leader>gd :GoDoc<CR>
-
-" Go to the definition of the symbol under the cursor
-nnoremap <leader>gD :GoDef<CR>
-
-" Rename a symbol using LSP (requires gopls)
-nnoremap <leader>gr :GoRename<CR>
-
-" Add or remove imports (organize imports)
-nnoremap <leader>gi :GoImports<CR>
-
-" Show the type of the symbol under the cursor
-nnoremap <leader>gt :GoInfo<CR>
-
-" Run benchmarks
-nnoremap <leader>gb :GoBench<CR>
+nnoremap <leader>gr :GoRun<CR>
 
 nnoremap <C-h> <C-w>h " Move to the left window
 nnoremap <C-j> <C-w>j " Move to the window below
@@ -226,6 +206,16 @@ nnoremap <leader>c :AIChat<CR>
 " redo last AI command
 nnoremap <leader>r :AIRedo<CR>
 
+nnoremap <leader>qf <Plug>(coc-codeaction)
+nnoremap <silent> <leader>gd <Plug>(coc-definition)    " Go-to-definition
+nnoremap <silent> <leader>gh :call CocAction('hover')<CR> " Show hover info
+nnoremap <silent> <leader>rn <Plug>(coc-rename)
+
+nnoremap <leader>tn :tabnext<CR>
+nnoremap <leader>tp :tabprevious<CR>
+nnoremap <leader>tc :tabclose<CR>
+nnoremap <leader>to :tabnew<CR>
+
 " }}}
 
 
@@ -266,3 +256,4 @@ let g:vim_ai_edit = {
 " Status bar code goes here.
 
 " }}}
+
