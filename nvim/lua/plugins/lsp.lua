@@ -20,7 +20,8 @@ return {
 			"force",
 			{},
 			vim.lsp.protocol.make_client_capabilities(),
-			cmp_lsp.default_capabilities())
+			cmp_lsp.default_capabilities()
+		)
 
 		require("fidget").setup({})
 		require("mason").setup()
@@ -45,7 +46,7 @@ return {
 			},
 			handlers = {
 				function(server_name)
-					require("lspconfig")[server_name].setup {
+					require("lspconfig")[server_name].setup({
 						capabilities = capabilities,
 						on_attach = function(client, bufnr)
 							local bufopts = { noremap = true, silent = true, buffer = bufnr }
@@ -61,12 +62,21 @@ return {
 								vim.lsp.buf.format({ async = true })
 							end, bufopts)
 						end,
-					}
+					})
+				end,
+
+				["clangd"] = function()
+					local lspconfig = require("lspconfig")
+					lspconfig.clangd.setup({
+						init_options = {
+							fallbackFlags = { "--std=c++20" },
+						},
+					})
 				end,
 
 				["lua_ls"] = function()
 					local lspconfig = require("lspconfig")
-					lspconfig.lua_ls.setup {
+					lspconfig.lua_ls.setup({
 						capabilities = capabilities,
 						settings = {
 							Lua = {
@@ -87,17 +97,17 @@ return {
 								telemetry = {
 									enable = false,
 								},
-							}
-						}
-					}
+							},
+						},
+					})
 				end,
 
 				["gopls"] = function()
 					local lspconfig = require("lspconfig")
 					local util = require("lspconfig/util")
-					lspconfig.gopls.setup {
+					lspconfig.gopls.setup({
 						capabilities = capabilities,
-						cmd = {"gopls"},
+						cmd = { "gopls" },
 						filetypes = { "go", "gomod", "gowork", "gotmpl" },
 						root_dir = util.root_pattern("go.work", "go.mod", ".git"),
 						settings = {
@@ -106,10 +116,10 @@ return {
 							analyses = {
 								unusedparams = true,
 							},
-						}
-					}
+						},
+					})
 				end,
-			}
+			},
 		})
 
 		local cmp_select = { behavior = cmp.SelectBehavior.Select }
@@ -132,7 +142,7 @@ return {
 				{ name = "luasnip" },
 			}, {
 				{ name = "buffer" },
-			})
+			}),
 		})
 
 		vim.diagnostic.config({
@@ -145,6 +155,5 @@ return {
 				prefix = "",
 			},
 		})
-
-	end
+	end,
 }
