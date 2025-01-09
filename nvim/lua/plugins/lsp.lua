@@ -11,6 +11,7 @@ return {
 		"L3MON4D3/LuaSnip",
 		"saadparwaiz1/cmp_luasnip",
 		"j-hui/fidget.nvim",
+		"WhoIsSethDaniel/mason-tool-installer.nvim",
 	},
 
 	config = function()
@@ -20,7 +21,8 @@ return {
 			"force",
 			{},
 			vim.lsp.protocol.make_client_capabilities(),
-			cmp_lsp.default_capabilities())
+			cmp_lsp.default_capabilities()
+		)
 
 		require("fidget").setup({})
 		require("mason").setup()
@@ -28,6 +30,8 @@ return {
 			ensure_installed = {
 				"lua_ls",
 				"rust_analyzer",
+				"tailwindcss",
+				"emmet_ls",
 				"gopls",
 				"ts_ls",
 				"markdown_oxide",
@@ -45,7 +49,7 @@ return {
 			},
 			handlers = {
 				function(server_name)
-					require("lspconfig")[server_name].setup {
+					require("lspconfig")[server_name].setup({
 						capabilities = capabilities,
 						on_attach = function(client, bufnr)
 							local bufopts = { noremap = true, silent = true, buffer = bufnr }
@@ -61,12 +65,12 @@ return {
 								vim.lsp.buf.format({ async = true })
 							end, bufopts)
 						end,
-					}
+					})
 				end,
 
 				["lua_ls"] = function()
 					local lspconfig = require("lspconfig")
-					lspconfig.lua_ls.setup {
+					lspconfig.lua_ls.setup({
 						capabilities = capabilities,
 						settings = {
 							Lua = {
@@ -87,29 +91,44 @@ return {
 								telemetry = {
 									enable = false,
 								},
-							}
-						}
-					}
+							},
+						},
+					})
 				end,
 
 				["gopls"] = function()
 					local lspconfig = require("lspconfig")
 					local util = require("lspconfig/util")
-					lspconfig.gopls.setup {
+					lspconfig.gopls.setup({
 						capabilities = capabilities,
-						cmd = {"gopls"},
+						cmd = { "gopls" },
 						filetypes = { "go", "gomod", "gowork", "gotmpl" },
-						root_dir = util.root_pattern("go.work", "go.mod", ".git"),
+						root_dir = function(fname)
+							local dir = util.root_pattern("go.work", "go.mod", ".git")(fname) or vim.fn.getcwd()
+							vim.notify("Detected root directory: " .. dir, vim.log.levels.INFO)
+							return dir
+						end,
 						settings = {
 							completeUnimported = true,
 							usePlaceholders = true,
 							analyses = {
 								unusedparams = true,
 							},
-						}
-					}
+							workspace = {
+								experimentalWorkspaceModule = true,
+							},
+						},
+					})
 				end,
-			}
+
+				["clangd"] = function()
+					require("lspconfig").clangd.setup({
+						init_options = {
+							fallbackFlags = { "--std=c++20" },
+						},
+					})
+				end,
+			},
 		})
 
 		local cmp_select = { behavior = cmp.SelectBehavior.Select }
@@ -132,7 +151,7 @@ return {
 				{ name = "luasnip" },
 			}, {
 				{ name = "buffer" },
-			})
+			}),
 		})
 
 		vim.diagnostic.config({
@@ -146,5 +165,22 @@ return {
 			},
 		})
 
-	end
+		local mason_tool_installer = require("mason-tool-installer")
+
+		mason_tool_installer.setup({
+			ensure_installed = {
+				"prettier",
+				"stylua",
+				"isort",
+				"black",
+				"clang-format",
+				"shfmt",
+				"golines",
+				"goimports",
+				"gofumpt",
+				"gci",
+				"rustfmt",
+			},
+		})
+	end,
 }
