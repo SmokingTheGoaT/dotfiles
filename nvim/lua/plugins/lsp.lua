@@ -123,7 +123,7 @@ return {
 							analyses = {
 								unusedparams = true,
 							},
-              workspace = {
+							workspace = {
 								experimentalWorkspaceModule = true,
 							},
 						},
