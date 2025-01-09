@@ -1,6 +1,9 @@
 local M = {}
 
 M.setup = function()
+
+	------------ General Opts -----------------------
+
 	-- Set global leader to <Space>
 	vim.g.mapleader = " "
 	-- Set local global to \\
@@ -8,7 +11,37 @@ M.setup = function()
 
 	local opts = { noremap = true, silent = true }
 
-	-- Useful shorcuts
+	------------- Util Functions --------------------
+
+	-- Prompt file name and open a new buffer 
+	local function prompt_and_open_file(cmd)
+		if cmd == "" then
+			print("Missing command to open a new buffer.")
+			return
+		end
+		local file = vim.fn.input("Enter file name: ", "", "file")
+		vim.cmd(file == "" and cmd or cmd .. " " .. file)
+	end
+
+	-- Prompt resize input for user or use default of 2 
+	local function resize_split(direction)
+		local arg = vim.fn.input("Enter size: ")
+		-- Validate the input
+		if arg == "" or not tonumber(arg) then
+			print("Invalid size!")
+			return
+		end
+		local size = tonumber(arg) or 2
+		if direction == "v" then
+			vim.cmd("vertical resize " .. size)
+		elseif direction == "h" then
+			vim.cmd("resize " .. size)
+		else
+			print("Invalid direction! Use 'v' or 'h'.")
+		end
+	end
+
+	------------- General Keymaps -------------------
 
 	-- Exit insert mode 
 	vim.keymap.set("i", "jk", "<Esc>", vim.tbl_extend("force", opts, { desc = "Exit insert mode" }))
@@ -25,33 +58,11 @@ M.setup = function()
 	-- Force quit current buffer
 	vim.keymap.set("n", "<leader>qq", ":q!<CR>", vim.tbl_extend("force", opts, { desc = "Force quit current buffer" }))
 
-	-- Prompt file name and open a new buffer 
-	local function prompt_and_open_file(cmd)
-		if cmd == "" then
-			print("Missing command to open a new buffer.")
-			return
-		end
-		local file = vim.fn.input("Enter file name: ", "", "file")
-		vim.cmd(file == "" and cmd or cmd .. " " .. file)
-	end
+	-- Quit NeoVim
+	vim.keymap.set("n", "<leader>qa", ":qa<CR>", vim.tbl_extend("force", opts, { desc = "Quit NeoVim" }))
 
-	-- Prompt resize input for user or use default of 2 
-	local function resize_split(direction)
-		local arg = vim.fn.input("Enter size: ")
-		  -- Validate the input
-  		if arg == "" or not tonumber(arg) then
-    			print("Invalid size!")
-    			return
-  		end
-		local size = tonumber(arg) or 2
-		if direction == "v" then
-    			vim.cmd("vertical resize " .. size)
-  		elseif direction == "h" then
-    			vim.cmd("resize " .. size)
-  		else
-    			print("Invalid direction! Use 'v' or 'h'.")
-  		end
-	end
+	-- Clear search highlights
+	vim.keymap.set("n", "<leader>csh", ":nohl<CR>", vim.tbl_extend("force", opts, { desc = "Clear search highlights"}))
 
 	-- Prompt to open a new buffer with name
 	vim.keymap.set("n", "<leader>e", function() prompt_and_open_file("e") end, vim.tbl_extend("force", opts, { desc = "Prompt to open a new buffer with :name" }))
@@ -98,15 +109,15 @@ M.setup = function()
 	-- Close current tab or tab at position n
 	vim.keymap.set("n", "<leader>tbc", function()
 		local arg = vim.fn.input("Tab position: ")
-	  	-- Validate the input
+		-- Validate the input
 		if arg == "" then
 			vim.cmd("tabclose")
 			return
 		end
-  		if tonumber(arg) then
+		if tonumber(arg) then
 			vim.cmd("tabclose" .. tonumber(arg))
-    			return
-  		end
+			return
+		end
 	end, vim.tbl_extend("force", opts, { desc = "Close current tab or tab at position n" }))
 
 	-- Terminal 
@@ -123,14 +134,6 @@ M.setup = function()
 	vim.keymap.set("n", "<leader>nv", ":vsplit | Oil<CR>", opts)
 	vim.keymap.set("n", "<leader>nh", ":split | Oil<CR>", opts)
 
-	-- Telescope 
-	local builtin = require('telescope.builtin')
-	vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Telescope find files' })
-	vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Telescope live grep' })
-	vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = 'Telescope buffers' })
-	vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = 'Telescope help tags' })
-	vim.keymap.set('n', '<leader>fc', builtin.git_commits, { desc = 'Telescope git commits' })
-	vim.keymap.set('n', '<leader>fs', builtin.grep_string, { desc = 'Telescope search word under cursor' })
-end
+	end
 
 return M

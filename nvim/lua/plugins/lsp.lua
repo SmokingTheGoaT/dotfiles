@@ -11,6 +11,7 @@ return {
 		"L3MON4D3/LuaSnip",
 		"saadparwaiz1/cmp_luasnip",
 		"j-hui/fidget.nvim",
+		"WhoIsSethDaniel/mason-tool-installer.nvim",
 	},
 
 	config = function()
@@ -29,6 +30,8 @@ return {
 			ensure_installed = {
 				"lua_ls",
 				"rust_analyzer",
+				"tailwindcss",
+				"emmet_ls",
 				"gopls",
 				"ts_ls",
 				"markdown_oxide",
@@ -109,12 +112,19 @@ return {
 						capabilities = capabilities,
 						cmd = { "gopls" },
 						filetypes = { "go", "gomod", "gowork", "gotmpl" },
-						root_dir = util.root_pattern("go.work", "go.mod", ".git"),
+						root_dir = function(fname)
+							local dir = util.root_pattern("go.work", "go.mod", ".git")(fname) or vim.fn.getcwd()
+							vim.notify("Detected root directory: " .. dir, vim.log.levels.INFO)
+							return dir
+						end,
 						settings = {
 							completeUnimported = true,
 							usePlaceholders = true,
 							analyses = {
 								unusedparams = true,
+							},
+              workspace = {
+								experimentalWorkspaceModule = true,
 							},
 						},
 					})
@@ -153,6 +163,24 @@ return {
 				source = "always",
 				header = "",
 				prefix = "",
+			},
+		})
+
+		local mason_tool_installer = require("mason-tool-installer")
+
+		mason_tool_installer.setup({
+			ensure_installed = {
+				"prettier",
+				"stylua",
+				"isort",
+				"black",
+				"clang-format",
+				"shfmt",
+				"golines",
+				"goimports",
+				"gofumpt",
+				"gci",
+				"rustfmt",
 			},
 		})
 	end,
