@@ -68,6 +68,15 @@ return {
 					})
 				end,
 
+				["clangd"] = function()
+					local lspconfig = require("lspconfig")
+					lspconfig.clangd.setup({
+						init_options = {
+							fallbackFlags = { "--std=c++20" },
+						},
+					})
+				end,
+
 				["lua_ls"] = function()
 					local lspconfig = require("lspconfig")
 					lspconfig.lua_ls.setup({
@@ -114,17 +123,9 @@ return {
 							analyses = {
 								unusedparams = true,
 							},
-							workspace = {
+              workspace = {
 								experimentalWorkspaceModule = true,
 							},
-						},
-					})
-				end,
-
-				["clangd"] = function()
-					require("lspconfig").clangd.setup({
-						init_options = {
-							fallbackFlags = { "--std=c++20" },
 						},
 					})
 				end,
