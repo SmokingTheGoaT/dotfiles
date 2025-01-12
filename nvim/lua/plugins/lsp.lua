@@ -31,7 +31,6 @@ return {
 				"lua_ls",
 				"rust_analyzer",
 				"tailwindcss",
-				"emmet_ls",
 				"gopls",
 				"ts_ls",
 				"markdown_oxide",
