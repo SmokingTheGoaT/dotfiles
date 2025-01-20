@@ -12,11 +12,13 @@ return {
 		"saadparwaiz1/cmp_luasnip",
 		"j-hui/fidget.nvim",
 		"WhoIsSethDaniel/mason-tool-installer.nvim",
+		"SmiteshP/nvim-navic",
 	},
 
 	config = function()
 		local cmp = require("cmp")
 		local cmp_lsp = require("cmp_nvim_lsp")
+		local navic = require("nvim-navic")
 		local capabilities = vim.tbl_deep_extend(
 			"force",
 			{},
@@ -52,17 +54,60 @@ return {
 						capabilities = capabilities,
 						on_attach = function(client, bufnr)
 							local bufopts = { noremap = true, silent = true, buffer = bufnr }
-							vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
-							vim.keymap.set("n", "gD", vim.lsp.buf.declaration, bufopts)
-							vim.keymap.set("n", "gi", vim.lsp.buf.implementation, bufopts)
-							vim.keymap.set("n", "gr", vim.lsp.buf.references, bufopts)
-							vim.keymap.set("n", "K", vim.lsp.buf.hover, bufopts)
-							vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, bufopts)
-							vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, bufopts)
-							vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, bufopts)
+							vim.keymap.set(
+								"n",
+								"gd",
+								vim.lsp.buf.definition,
+								vim.tbl_extend("force", bufopts, { desc = "Toggle definition" })
+							)
+							vim.keymap.set(
+								"n",
+								"gD",
+								vim.lsp.buf.declaration,
+								vim.tbl_extend("force", bufopts, { desc = "Go to declaration" })
+							)
+							vim.keymap.set(
+								"n",
+								"gi",
+								vim.lsp.buf.implementation,
+								vim.tbl_extend("force", bufopts, { desc = "Go to implementation" })
+							)
+							vim.keymap.set(
+								"n",
+								"gr",
+								vim.lsp.buf.references,
+								vim.tbl_extend("force", bufopts, { desc = "Go to references" })
+							)
+							vim.keymap.set(
+								"n",
+								"K",
+								vim.lsp.buf.hover,
+								vim.tbl_extend("force", bufopts, { desc = "Toggle hover definition" })
+							)
+							vim.keymap.set(
+								"n",
+								"<C-k>",
+								vim.lsp.buf.signature_help,
+								vim.tbl_extend("force", bufopts, { desc = "Get signature help" })
+							)
+							vim.keymap.set(
+								"n",
+								"<leader>uy",
+								vim.lsp.buf.rename,
+								vim.tbl_extend("force", bufopts, { desc = "LSP rename" })
+							)
+							vim.keymap.set(
+								"n",
+								"<leader>ca",
+								vim.lsp.buf.code_action,
+								vim.tbl_extend("force", bufopts, { desc = "Toggle code action" })
+							)
 							vim.keymap.set("n", "<leader>fmt", function()
 								vim.lsp.buf.format({ async = true })
 							end, bufopts)
+							if client.server_capabilities.documentSymbolProvider then
+								navic.attach(client, bufnr)
+							end
 						end,
 					})
 				end,
@@ -70,9 +115,9 @@ return {
 				["clangd"] = function()
 					local lspconfig = require("lspconfig")
 					lspconfig.clangd.setup({
-						init_options = {
-							fallbackFlags = { "--std=c++20" },
-						},
+						-- init_options = {
+						-- 	fallbackFlags = { "--std=c++20" },
+						-- },
 					})
 				end,
 

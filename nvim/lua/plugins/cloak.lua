@@ -1,6 +1,6 @@
 return {
 	"laytan/cloak.nvim",
-	config = function() 
+	config = function()
 		require("cloak").setup({
 			enabled = true,
 			cloak_character = "*",
@@ -12,9 +12,9 @@ return {
 						"wrangler.toml",
 						".dev.vars",
 					},
-					cloak_pattern = "=.+"
+					cloak_pattern = "=.+",
 				},
 			},
 		})
-	end
+	end,
 }
