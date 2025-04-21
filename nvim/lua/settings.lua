@@ -29,7 +29,7 @@ M.setup = function()
 	vim.opt.splitbelow = true
 
 	-- Log Levels
-	vim.lsp.set_log_level("debug")
+	--[[ vim.lsp.set_log_level("debug") ]]
 end
 
 return M

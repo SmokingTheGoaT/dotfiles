@@ -50,7 +50,7 @@ return {
 			},
 			handlers = {
 				function(server_name)
-					require("lspconfig")[server_name].setup({
+					local opts = {
 						capabilities = capabilities,
 						on_attach = function(client, bufnr)
 							local bufopts = { noremap = true, silent = true, buffer = bufnr }
@@ -92,7 +92,7 @@ return {
 							)
 							vim.keymap.set(
 								"n",
-								"<leader>uy",
+								"<leader>ra",
 								vim.lsp.buf.rename,
 								vim.tbl_extend("force", bufopts, { desc = "LSP rename" })
 							)
@@ -109,23 +109,16 @@ return {
 								navic.attach(client, bufnr)
 							end
 						end,
-					})
-				end,
+					}
 
-				["clangd"] = function()
-					local lspconfig = require("lspconfig")
-					lspconfig.clangd.setup({
-						-- init_options = {
-						-- 	fallbackFlags = { "--std=c++20" },
-						-- },
-					})
-				end,
+					-- if server_name == "clangd" then
+					-- 	opts.init_options = {
+					-- 		fallbackFlags = { "--std=c++20" },
+					-- 	}
+					-- end
 
-				["lua_ls"] = function()
-					local lspconfig = require("lspconfig")
-					lspconfig.lua_ls.setup({
-						capabilities = capabilities,
-						settings = {
+					if server_name == "lua_ls" then
+						opts.settings = {
 							Lua = {
 								runtime = {
 									version = "LuaJIT",
@@ -145,34 +138,96 @@ return {
 									enable = false,
 								},
 							},
-						},
-					})
-				end,
+						}
+					end
 
-				["gopls"] = function()
-					local lspconfig = require("lspconfig")
-					local util = require("lspconfig/util")
-					lspconfig.gopls.setup({
-						capabilities = capabilities,
-						cmd = { "gopls" },
-						filetypes = { "go", "gomod", "gowork", "gotmpl" },
-						root_dir = function(fname)
+					if server_name == "gopls" then
+						local util = require("lspconfig/util")
+						opts.cmd = { "gopls" }
+						opts.filetypes = { "go", "gomod", "gowork", "gotmpl" }
+						opts.root_dir = function(fname)
 							local dir = util.root_pattern("go.work", "go.mod", ".git")(fname) or vim.fn.getcwd()
 							vim.notify("Detected root directory: " .. dir, vim.log.levels.INFO)
 							return dir
-						end,
-						settings = {
-							completeUnimported = true,
-							usePlaceholders = true,
-							analyses = {
-								unusedparams = true,
+						end
+						opts.settings = {
+							gopls = {
+								completeUnimported = true,
+								usePlaceholders = true,
+								analyses = {
+									unusedparams = true,
+								},
+								-- workspace = {
+								-- 	experimentalWorkspaceModule = true,
+								-- },
 							},
-							workspace = {
-								experimentalWorkspaceModule = true,
-							},
-						},
-					})
+						}
+					end
+
+					require("lspconfig")[server_name].setup(opts)
 				end,
+
+				-- ["clangd"] = function()
+				-- 	local lspconfig = require("lspconfig")
+				-- 	lspconfig.clangd.setup({
+				-- 		-- init_options = {
+				-- 		-- 	fallbackFlags = { "--std=c++20" },
+				-- 		-- },
+				-- 	})
+				-- end,
+				--
+				-- ["lua_ls"] = function()
+				-- 	local lspconfig = require("lspconfig")
+				-- 	lspconfig.lua_ls.setup({
+				-- 		capabilities = capabilities,
+				-- 		settings = {
+				-- 			Lua = {
+				-- 				runtime = {
+				-- 					version = "LuaJIT",
+				-- 					path = vim.split(package.path, ";"),
+				-- 				},
+				-- 				diagnostics = {
+				-- 					globals = { "vim", "it", "describe", "before_each", "after_each" },
+				-- 				},
+				-- 				workspace = {
+				-- 					library = {
+				-- 						[vim.fn.expand("$VIMRUNTIME/lua")] = true,
+				-- 						[vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
+				-- 					},
+				-- 					checkThirdParty = false,
+				-- 				},
+				-- 				telemetry = {
+				-- 					enable = false,
+				-- 				},
+				-- 			},
+				-- 		},
+				-- 	})
+				-- end,
+				--
+				-- ["gopls"] = function()
+				-- 	local lspconfig = require("lspconfig")
+				-- 	local util = require("lspconfig/util")
+				-- 	lspconfig.gopls.setup({
+				-- 		capabilities = capabilities,
+				-- 		cmd = { "gopls" },
+				-- 		filetypes = { "go", "gomod", "gowork", "gotmpl" },
+				-- 		root_dir = function(fname)
+				-- 			local dir = util.root_pattern("go.work", "go.mod", ".git")(fname) or vim.fn.getcwd()
+				-- 			vim.notify("Detected root directory: " .. dir, vim.log.levels.INFO)
+				-- 			return dir
+				-- 		end,
+				-- 		settings = {
+				-- 			completeUnimported = true,
+				-- 			usePlaceholders = true,
+				-- 			analyses = {
+				-- 				unusedparams = true,
+				-- 			},
+				-- 			workspace = {
+				-- 				experimentalWorkspaceModule = true,
+				-- 			},
+				-- 		},
+				-- 	})
+				-- end,
 			},
 		})
 
@@ -204,7 +259,7 @@ return {
 				focusable = false,
 				style = "minimal",
 				border = "rounded",
-				source = "always",
+				source = "if_many",
 				header = "",
 				prefix = "",
 			},
@@ -224,7 +279,6 @@ return {
 				"goimports",
 				"gofumpt",
 				"gci",
-				"rustfmt",
 			},
 		})
 	end,

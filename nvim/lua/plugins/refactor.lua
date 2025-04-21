@@ -12,12 +12,16 @@ return {
 				go = true,
 				cpp = true,
 				c = true,
+				ts = true,
+				js = true,
 			},
 			-- prompt for function parameters
 			prompt_func_param_type = {
 				go = true,
 				cpp = true,
 				c = true,
+				ts = true,
+				js = true,
 			},
 		})
 	end,

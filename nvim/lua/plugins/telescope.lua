@@ -7,6 +7,7 @@ return {
 		"nvim-tree/nvim-web-devicons",
 		"folke/todo-comments.nvim",
 		"nvim-telescope/telescope-ui-select.nvim",
+		"jonarrien/telescope-cmdline.nvim",
 	},
 	config = function()
 		local telescope = require("telescope")
@@ -53,7 +54,8 @@ return {
 		})
 
 		-- Load extensions if needed
-		telescope.load_extension("fzf") -- Example extension
+		telescope.load_extension("fzf")
+		telescope.load_extension("cmdline")
 
 		-- Keymaps
 		local builtin = require("telescope.builtin")
@@ -65,5 +67,6 @@ return {
 		vim.keymap.set({ "n", "v" }, "<leader>fa", vim.lsp.buf.code_action, { desc = "Display code actions" })
 		vim.keymap.set("n", "<leader>fs", builtin.grep_string, { desc = "Telescope search word under cursor" })
 		vim.keymap.set("n", "<leader>ft", "<cmd>TodoTelescope<cr>", { desc = "Find todos" })
+		vim.keymap.set("n", "<leader><leader>", ":Telescope cmdline<CR>", { noremap = true, desc = "Cmdline" })
 	end,
 }
