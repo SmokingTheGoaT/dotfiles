@@ -1,7 +1,6 @@
 local M = {}
 
 M.setup = function()
-
 	------------ General Opts -----------------------
 
 	-- Set global leader to <Space>
@@ -13,7 +12,7 @@ M.setup = function()
 
 	------------- Util Functions --------------------
 
-	-- Prompt file name and open a new buffer 
+	-- Prompt file name and open a new buffer
 	local function prompt_and_open_file(cmd)
 		if cmd == "" then
 			print("Missing command to open a new buffer.")
@@ -23,7 +22,7 @@ M.setup = function()
 		vim.cmd(file == "" and cmd or cmd .. " " .. file)
 	end
 
-	-- Prompt resize input for user or use default of 2 
+	-- Prompt resize input for user or use default of 2
 	local function resize_split(direction)
 		local arg = vim.fn.input("Enter size: ")
 		-- Validate the input
@@ -43,10 +42,10 @@ M.setup = function()
 
 	------------- General Keymaps -------------------
 
-	-- Exit insert mode 
+	-- Exit insert mode
 	vim.keymap.set("i", "jk", "<Esc>", vim.tbl_extend("force", opts, { desc = "Exit insert mode" }))
 
-	-- Save current buffer 
+	-- Save current buffer
 	vim.keymap.set("n", "<leader>w", ":w<CR>", vim.tbl_extend("force", opts, { desc = "Save current buffer" }))
 
 	-- Quit current buffer
@@ -62,49 +61,93 @@ M.setup = function()
 	vim.keymap.set("n", "<leader>qa", ":qa<CR>", vim.tbl_extend("force", opts, { desc = "Quit NeoVim" }))
 
 	-- Clear search highlights
-	vim.keymap.set("n", "<leader>csh", ":nohl<CR>", vim.tbl_extend("force", opts, { desc = "Clear search highlights"}))
+	vim.keymap.set("n", "<leader>csh", ":nohl<CR>", vim.tbl_extend("force", opts, { desc = "Clear search highlights" }))
 
 	-- Prompt to open a new buffer with name
-	vim.keymap.set("n", "<leader>e", function() prompt_and_open_file("e") end, vim.tbl_extend("force", opts, { desc = "Prompt to open a new buffer with :name" }))
+	vim.keymap.set("n", "<leader>e", function()
+		prompt_and_open_file("e")
+	end, vim.tbl_extend("force", opts, { desc = "Prompt to open a new buffer with :name" }))
 
 	-- Prompt to open a horizontal split buffer with name
-	vim.keymap.set("n", "<leader>sp", function() prompt_and_open_file("split") end, vim.tbl_extend("force", opts, { desc = "Prompt to open a new horizontal buffer with :name" }))
+	vim.keymap.set("n", "<leader>sp", function()
+		prompt_and_open_file("split")
+	end, vim.tbl_extend("force", opts, { desc = "Prompt to open a new horizontal buffer with :name" }))
 
-	-- Prompt to open a vertical split buffer with name 
-	vim.keymap.set("n", "<leader>vsp", function() prompt_and_open_file("vsplit") end, vim.tbl_extend("force", opts, { desc = "Prompt to open a new vertical buffer with :name" }))
+	-- Prompt to open a vertical split buffer with name
+	vim.keymap.set("n", "<leader>vsp", function()
+		prompt_and_open_file("vsplit")
+	end, vim.tbl_extend("force", opts, { desc = "Prompt to open a new vertical buffer with :name" }))
 
 	-- Close all buffers except current
-	vim.keymap.set("n", "<leader>ob", ":only<CR>", vim.tbl_extend("force", opts, { desc = "Close all buffers except current" }))
+	vim.keymap.set(
+		"n",
+		"<leader>ob",
+		":only<CR>",
+		vim.tbl_extend("force", opts, { desc = "Close all buffers except current" })
+	)
 
 	-- Resize horizontal buffer by x amount
-	vim.keymap.set("n", "<leader>rh", function() resize_split("h") end, vim.tbl_extend("force", opts, { desc = "Resize horizontal buffer by x amount" }))
+	vim.keymap.set("n", "<leader>rh", function()
+		resize_split("h")
+	end, vim.tbl_extend("force", opts, { desc = "Resize horizontal buffer by x amount" }))
 
-	-- Resize vertical buffer by x amount 
-	vim.keymap.set("n", "<leader>rv", function() resize_split("v") end, vim.tbl_extend("force", opts, { desc = "Resize vertical buffer by x amount" }))
+	-- Resize vertical buffer by x amount
+	vim.keymap.set("n", "<leader>rv", function()
+		resize_split("v")
+	end, vim.tbl_extend("force", opts, { desc = "Resize vertical buffer by x amount" }))
 
 	-- Navigate to the next buffer
-	vim.keymap.set("n", "<leader>bn", ":bnext<CR>", vim.tbl_extend("force", opts, { desc = "Navigate to the next buffer" }))
+	vim.keymap.set(
+		"n",
+		"<leader>bn",
+		":bnext<CR>",
+		vim.tbl_extend("force", opts, { desc = "Navigate to the next buffer" })
+	)
 
 	-- Navigate to the previous buffer
-	vim.keymap.set("n", "<leader>bp", ":bprevious<CR>", vim.tbl_extend("force", opts, { desc = "Navigate to the previous buffer" }))
+	vim.keymap.set(
+		"n",
+		"<leader>bp",
+		":bprevious<CR>",
+		vim.tbl_extend("force", opts, { desc = "Navigate to the previous buffer" })
+	)
 
 	-- Open buffer by name
-	vim.keymap.set("n", "<leader>b", function() prompt_and_open_file("b") end, vim.tbl_extend("force", opts, { desc = "Open buffer by name" }))
+	vim.keymap.set("n", "<leader>b", function()
+		prompt_and_open_file("b")
+	end, vim.tbl_extend("force", opts, { desc = "Open buffer by name" }))
 
 	-- Close current buffer
 	vim.keymap.set("n", "<leader>bd", ":bd<CR>", vim.tbl_extend("force", opts, { desc = "Close current buffer" }))
 
 	-- Copy selected lines to system clipboard
-	vim.keymap.set("v", "<leader>c", '"+y', vim.tbl_extend("force", opts, { desc = "Copy selected lines to system clipboard" }))
+	vim.keymap.set(
+		"v",
+		"<leader>c",
+		'"+y',
+		vim.tbl_extend("force", opts, { desc = "Copy selected lines to system clipboard" })
+	)
 
 	-- Copy a single line to system clipboard
-	vim.keymap.set("n", "<leader>cl", ':normal! "+yy<CR>', vim.tbl_extend("force", opts, { desc = "Copy a single line to system clipboard" }))
+	vim.keymap.set(
+		"n",
+		"<leader>cl",
+		':normal! "+yy<CR>',
+		vim.tbl_extend("force", opts, { desc = "Copy a single line to system clipboard" })
+	)
 
-	-- Copy a file to the system clipboard 
-	vim.keymap.set("n", "<leader>cf", ":%y+<CR>", vim.tbl_extend("force", opts, { desc = "Copy a file to system clipboard" }))
+	-- Copy a file to the system clipboard
+	vim.keymap.set(
+		"n",
+		"<leader>cf",
+		":%y+<CR>",
+		vim.tbl_extend("force", opts, { desc = "Copy a file to system clipboard" })
+	)
 
-	-- Open a new tab, prompt to add file 
-	vim.keymap.set("n", "<leader>tb", function() prompt_and_open_file("tabnew") end, vim.tbl_extend("force", opts, { desc = "Prompt to open a new empty tab or with file" }))
+	-- Open a new tab, prompt to add file
+	vim.keymap.set("n", "<leader>tb", function()
+		prompt_and_open_file("tabnew")
+	end, vim.tbl_extend("force", opts, { desc = "Prompt to open a new empty tab or with file" }))
 
 	-- Close current tab or tab at position n
 	vim.keymap.set("n", "<leader>tbc", function()
@@ -120,7 +163,7 @@ M.setup = function()
 		end
 	end, vim.tbl_extend("force", opts, { desc = "Close current tab or tab at position n" }))
 
-	-- Terminal 
+	-- Terminal
 	vim.keymap.set("n", "<leader>th", ":split | wincmd J | terminal<CR>i", opts)
 	vim.keymap.set("n", "<leader>tv", ":vsplit | terminal<CR>i", opts)
 	vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], opts)
@@ -129,11 +172,34 @@ M.setup = function()
 	vim.keymap.set("t", "<C-j>", [[<C-\><C-n><C-w>j]], opts) -- Move down
 	vim.keymap.set("t", "<C-k>", [[<C-\><C-n><C-w>k]], opts) -- Move up
 
-	-- Oil.nvim 
+	-- Oil.nvim
 	vim.keymap.set("n", "<leader>n", ":Oil<CR>", opts)
 	vim.keymap.set("n", "<leader>nv", ":vsplit | Oil<CR>", opts)
 	vim.keymap.set("n", "<leader>nh", ":split | Oil<CR>", opts)
 
-	end
+	-- Claude Code
+	vim.keymap.set(
+		"n",
+		"<leader>cc",
+		"<cmd>ClaudeCode<CR>",
+		vim.tbl_extend("force", opts, { desc = "Toggle Claude Code" })
+	)
+end
+
+-- Navigate to the next page in the PDF
+vim.keymap.set(
+	"n",
+	"<leader>jj",
+	"<cmd>:lua require('pdfview.renderer').next_page()<CR>",
+	{ desc = "PDFview: Next page" }
+)
+
+-- Navigate to the previous page in the PDF
+vim.keymap.set(
+	"n",
+	"<leader>kk",
+	"<cmd>:lua require('pdfview.renderer').previous_page()<CR>",
+	{ desc = "PDFview: Previous page" }
+)
 
 return M

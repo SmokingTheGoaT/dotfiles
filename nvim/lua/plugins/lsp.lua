@@ -111,11 +111,37 @@ return {
 						end,
 					}
 
-					-- if server_name == "clangd" then
-					-- 	opts.init_options = {
-					-- 		fallbackFlags = { "--std=c++20" },
-					-- 	}
-					-- end
+					if server_name == "clangd" then
+						local util = require("lspconfig/util")
+						opts.cmd = {
+							"clangd",
+							"--background-index",
+							"--clang-tidy",
+							"--header-insertion=iwyu",
+							"--completion-style=detailed",
+							"--function-arg-placeholders",
+							"--fallback-style=llvm",
+							"--pch-storage=memory",
+							"--offset-encoding=utf-16",
+							"--enable-config",
+							"--compile-commands-dir=build",
+							"--query-driver=/usr/bin/clang++,/usr/bin/g++",
+						}
+						opts.init_options = {
+							clangdFileStatus = true,
+							usePlaceholders = true,
+							completeUnimported = true,
+							semanticHighlighting = true,
+						}
+						opts.filetypes = { "c", "cpp", "objc", "objcpp", "cuda", "proto" }
+						opts.root_dir = util.root_pattern(
+							"compile_commands.json",
+							"compile_flags.txt",
+							".clangd",
+							"CMakeLists.txt",
+							".git"
+						)
+					end
 
 					if server_name == "lua_ls" then
 						opts.settings = {
@@ -163,71 +189,33 @@ return {
 							},
 						}
 					end
-
+					if server_name == "rust_analyzer" then
+						opts.settings = {
+							["rust-analyzer"] = {
+								cargo = {
+									allFeatures = true,
+									loadOutDirsFromCheck = true,
+									runBuildScripts = true,
+								},
+								-- Add clippy lints for Rust.
+								checkOnSave = {
+									allFeatures = true,
+									command = "clippy",
+									extraArgs = { "--no-deps" },
+								},
+								procMacro = {
+									enable = true,
+									ignored = {
+										["async-trait"] = { "async_trait" },
+										["napi-derive"] = { "napi" },
+										["async-recursion"] = { "async_recursion" },
+									},
+								},
+							},
+						}
+					end
 					require("lspconfig")[server_name].setup(opts)
 				end,
-
-				-- ["clangd"] = function()
-				-- 	local lspconfig = require("lspconfig")
-				-- 	lspconfig.clangd.setup({
-				-- 		-- init_options = {
-				-- 		-- 	fallbackFlags = { "--std=c++20" },
-				-- 		-- },
-				-- 	})
-				-- end,
-				--
-				-- ["lua_ls"] = function()
-				-- 	local lspconfig = require("lspconfig")
-				-- 	lspconfig.lua_ls.setup({
-				-- 		capabilities = capabilities,
-				-- 		settings = {
-				-- 			Lua = {
-				-- 				runtime = {
-				-- 					version = "LuaJIT",
-				-- 					path = vim.split(package.path, ";"),
-				-- 				},
-				-- 				diagnostics = {
-				-- 					globals = { "vim", "it", "describe", "before_each", "after_each" },
-				-- 				},
-				-- 				workspace = {
-				-- 					library = {
-				-- 						[vim.fn.expand("$VIMRUNTIME/lua")] = true,
-				-- 						[vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
-				-- 					},
-				-- 					checkThirdParty = false,
-				-- 				},
-				-- 				telemetry = {
-				-- 					enable = false,
-				-- 				},
-				-- 			},
-				-- 		},
-				-- 	})
-				-- end,
-				--
-				-- ["gopls"] = function()
-				-- 	local lspconfig = require("lspconfig")
-				-- 	local util = require("lspconfig/util")
-				-- 	lspconfig.gopls.setup({
-				-- 		capabilities = capabilities,
-				-- 		cmd = { "gopls" },
-				-- 		filetypes = { "go", "gomod", "gowork", "gotmpl" },
-				-- 		root_dir = function(fname)
-				-- 			local dir = util.root_pattern("go.work", "go.mod", ".git")(fname) or vim.fn.getcwd()
-				-- 			vim.notify("Detected root directory: " .. dir, vim.log.levels.INFO)
-				-- 			return dir
-				-- 		end,
-				-- 		settings = {
-				-- 			completeUnimported = true,
-				-- 			usePlaceholders = true,
-				-- 			analyses = {
-				-- 				unusedparams = true,
-				-- 			},
-				-- 			workspace = {
-				-- 				experimentalWorkspaceModule = true,
-				-- 			},
-				-- 		},
-				-- 	})
-				-- end,
 			},
 		})
 

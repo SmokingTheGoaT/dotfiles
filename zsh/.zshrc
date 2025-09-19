@@ -137,10 +137,19 @@ complete -C '/usr/local/bin/aws_completer' aws
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+alias top=htop
 alias vim=nvim
 cpp() { clang++ $* }
 c() { gcc $* }
 nd() { node $* }
+orlis() {
+	git config --global user.name "ElOrlis"
+	git config --global user.email "orlandogarcia1997@outlook.com"
+}
+sgoat() {
+	git config --global user.name "SmokingGoat"
+	git config --global user.email "orlando.heaply@gmail.com"
+}
 export MODULAR_HOME="/Users/orlandogarcia/.modular"
 export PATH="/Users/orlandogarcia/.modular/pkg/packages.modular.com_mojo/bin:$PATH"
 export PATH=$PATH:$HOME/go/bin
@@ -152,8 +161,15 @@ source <(fzf --zsh)
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init - zsh)"
+eval "$(direnv hook zsh)"
 
 # Created by `pipx` on 2025-01-12 02:59:01
 export PATH="$PATH:/Users/orlandogarcia/.local/bin"
 export PATH="opt/homebrew/opt/openjdk/bin:$PATH"
 export CPPFLAGS="-I/opt/homebrew/opt/openjdk/include"
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+export PATH="/opt/homebrew/opt/poppler-qt5/bin:$PATH"
+alias zshrc='source ~/.zshrc'
